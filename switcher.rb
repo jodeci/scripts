@@ -4,17 +4,12 @@
 # alias cdd='`ruby ~/scripts/switcher.rb`'
 
 basepath = "/Users/jodeci/codebase"
-target = ARGV[0]
 
-if target.nil?
-  if Dir.pwd =~ /#{basepath}\/.*/
-    match = Dir.pwd.sub(basepath, '').split('/')
-    cmd = "cd #{basepath}/#{match[1]}"
-  else
-    cmd = "cd #{basepath}"
-  end
+if Dir.pwd =~ /#{basepath}\/.*/
+  match = Dir.pwd.sub(basepath, '').split('/')
+  cmd = "cd #{basepath}/#{match[1]}"
 else
-  cmd = "cd #{basepath}/#{target}"
+  cmd = "cd #{basepath}"
 end
 
 puts cmd
