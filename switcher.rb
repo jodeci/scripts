@@ -1,5 +1,8 @@
 #!/usr/bin/ruby
 
+# .bash_profile
+# alias cdd='`ruby ~/scripts/switcher.rb`'
+
 basepath = "/Users/jodeci/codebase"
 target = ARGV[0]
 

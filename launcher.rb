@@ -1,5 +1,10 @@
 #!/usr/bin/ruby
 
+# .bash_profile
+# alias md='ruby ~/scripts/launcher.rb --app macdown'
+# $ md -n newfile
+# $ md file
+
 require "trollop"
 opts = Trollop::options do
   opt :new, "new file", type: String, short: "n"
