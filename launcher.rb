@@ -6,13 +6,14 @@
 # $ md file
 
 require "trollop"
+require "shellwords"
 opts = Trollop::options do
   opt :new, "new file", type: String, short: "n"
   opt :app, "app name", type: String
 end
 
 if opts[:app_given]
-  app = "/Applications/#{opts[:app]}.app/"
+  app = "/Applications/#{Shellwords::shellescape(opts[:app])}.app/"
 else
   abort "no app"
 end
