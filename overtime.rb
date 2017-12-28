@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 abort "usage: [月薪] [加班時數]" if ARGV.empty?
-salary = ARGV[0].to_i
+salary = ARGV[0].to_f
 hours = ARGV[1].to_f
 
 # 一例一休 平日加班費計算
