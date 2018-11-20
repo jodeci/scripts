@@ -5,9 +5,9 @@
 # $ md -n newfile
 # $ md file
 
-require "trollop"
+require "optimist"
 require "shellwords"
-opts = Trollop::options do
+opts = Optimist::options do
   opt :new, "new file", type: String, short: "n"
   opt :app, "app name", type: String
 end
