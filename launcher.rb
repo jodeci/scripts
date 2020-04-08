@@ -10,10 +10,17 @@ require "shellwords"
 opts = Optimist::options do
   opt :new, "new file", type: String, short: "n"
   opt :app, "app name", type: String
+  opt :path, "path", type: String
+end
+
+if opts[:path]
+  path = opts[:path]
+else
+  abort "no path"
 end
 
 if opts[:app_given]
-  app = "/Applications/#{Shellwords::shellescape(opts[:app])}.app/"
+  app = "#{path}/#{Shellwords::shellescape(opts[:app])}.app/"
 else
   abort "no app"
 end
