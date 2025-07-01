@@ -27,12 +27,20 @@ text.gsub!(/"[^"]*"/m, '')
 # end up with stray "'s" tokens.
 words = text.downcase.scan(/[a-z]+(?:'[a-z]+)*/)
 
-# Stop words to place at the end using the built-in list from the stopwords gem
-# plus a few common contractions and auxiliary verbs that are not included
-# in that list.
-STOP_WORDS = Stopwords::STOP_WORDS.to_set.merge(%w[did didn't couldn't])
 # Use fast-stemmer for full stemming and Lemmatizer for irregular forms
 LEMMATIZER = Lemmatizer.new
+
+# Stop words to place at the end. Start with the default list from the
+# `stopwords` gem and merge in a few extras requested by the user.  We also
+# precompute the stems of these words so they still match after lemmatization
+# and stemming.
+CUSTOM_STOP_WORDS = %w[this i as that his they did could didn't couldn't]
+STOP_WORDS_ORIG = Stopwords::STOP_WORDS.to_set.merge(CUSTOM_STOP_WORDS)
+STOP_WORD_STEMS = STOP_WORDS_ORIG.map do |w|
+  normalized = w.downcase.gsub(/[\u2018\u2019]/, "'")
+  lemma = LEMMATIZER.lemma(normalized)
+  Stemmer.stem_word(lemma)
+end.to_set
 
 # Count occurrences by stem and original word
 counts = Hash.new { |h, k| h[k] = { count: 0, forms: Hash.new(0), order: nil } }
@@ -58,7 +66,7 @@ counts.each do |root, data|
   total = data[:count]
   form_list = forms.keys.join(', ')
   entry = [form_list, total, data[:order]]
-  if STOP_WORDS.include?(root)
+  if STOP_WORD_STEMS.include?(root)
     stop << entry
   else
     main << entry
