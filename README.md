@@ -2,11 +2,11 @@
 
 ## Setup
 
-These scripts rely on a few Ruby gems. To run `word_counter.rb`, you need the
-`fast-stemmer` gem installed:
+These scripts rely on a few Ruby gems. To run `word_counter.rb`, install the
+`fast-stemmer` and `lemmatizer` gems:
 
 ```bash
-gem install fast-stemmer
+gem install fast-stemmer lemmatizer
 ```
 
 ## Usage

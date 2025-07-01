@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require "fast_stemmer"
+require "lemmatizer"
 
 abort "usage: #{__FILE__} [markdown_file]" if ARGV.empty?
 
@@ -24,22 +25,16 @@ words = text.downcase.scan(/[a-z]+(?:'[a-z]+)*/)
 
 # Stop words to place at the end
 STOP_WORDS = %w[a an the he she it his her him their they them is am are was were be been being have has had do does did to in on at for and or but if then with by of from this i as that].freeze
-# Map irregular verb forms so words like "froze" and "freeze" are grouped
-IRREGULAR_FORMS = {
-  'froze'  => 'freez',
-  'frozen' => 'freez',
-  'went'   => 'go',
-  'gone'   => 'go'
-}.freeze
-# Use fast-stemmer for full stemming
+# Use fast-stemmer for full stemming and Lemmatizer for irregular forms
+LEMMATIZER = Lemmatizer.new
 
 # Count occurrences by stem and original word
 counts = Hash.new { |h, k| h[k] = { count: 0, forms: Hash.new(0), order: nil } }
 index = 0
 words.each do |word|
-  # Stem the word and then apply any irregular mapping
-  root = Stemmer.stem_word(word)
-  root = IRREGULAR_FORMS.fetch(word, IRREGULAR_FORMS.fetch(root, root))
+  # Normalize irregular forms using the lemmatizer then stem
+  lemma = LEMMATIZER.lemma(word)
+  root = Stemmer.stem_word(lemma)
   data = counts[root]
   data[:order] ||= index
   data[:count] += 1
