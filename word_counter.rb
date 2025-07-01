@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require "lingua/stemmer"
+require "fast_stemmer"
 
 abort "usage: #{__FILE__} [markdown_file]" if ARGV.empty?
 
@@ -19,14 +19,13 @@ words = text.downcase.scan(/[a-z']+/)
 
 # Stop words to place at the end
 STOP_WORDS = %w[a an the he she it his her him their they them is am are was were be been being have has had do does did to in on at for and or but if then with by of from this i as that].freeze
-# Use Lingua::Stemmer for full stemming
-STEMMER = Lingua::Stemmer.new(language: "en")
+# Use fast-stemmer for full stemming
 
 # Count occurrences by stem and original word
 counts = Hash.new { |h, k| h[k] = { count: 0, forms: Hash.new(0), order: nil } }
 index = 0
 words.each do |word|
-  root = STEMMER.stem(word)
+  root = Stemmer.stem_word(word)
   data = counts[root]
   data[:order] ||= index
   data[:count] += 1
