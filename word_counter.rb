@@ -13,13 +13,15 @@ text = File.read(file)
 # Normalize curly apostrophes to regular ones so words like “couldn’t”
 # are tokenized correctly
 text.gsub!(/[\u2018\u2019]/, "'")
+# Normalize curly double quotes so dialogue can be removed consistently
+text.gsub!(/[\u201C\u201D]/, '"')
 
 # Remove stray "'s" fragments that can appear when apostrophes are detached but
 # ensure we don't strip possessives like "lucy's"
 text.gsub!(/(?<![A-Za-z])'s\b/, '')
 
-# Remove dialogue inside double quotes
-text.gsub!(/"[^"]*"/, '')
+# Remove dialogue inside double quotes (including normalized curly quotes)
+text.gsub!(/"[^"]*"/m, '')
 
 # Tokenize words. Allow internal apostrophes but avoid leading ones so we don't
 # end up with stray "'s" tokens.

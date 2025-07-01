@@ -15,3 +15,6 @@ gem install fast-stemmer lemmatizer stopwords
 ```bash
 ./word_counter.rb sample.md
 ```
+
+The script removes dialogue enclosed in straight or curly double quotes before
+counting words so quoted speech is ignored.
