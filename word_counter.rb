@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 require "fast_stemmer"
 require "lemmatizer"
+require "stopwords"
+require "set"
 
 abort "usage: #{__FILE__} [markdown_file]" if ARGV.empty?
 
@@ -23,8 +25,8 @@ text.gsub!(/"[^"]*"/, '')
 # end up with stray "'s" tokens.
 words = text.downcase.scan(/[a-z]+(?:'[a-z]+)*/)
 
-# Stop words to place at the end
-STOP_WORDS = %w[a an the he she it his her him their they them is am are was were be been being have has had do does did to in on at for and or but if then with by of from this i as that].freeze
+# Stop words to place at the end using the built-in list from the stopwords gem
+STOP_WORDS = Stopwords::STOP_WORDS.to_set
 # Use fast-stemmer for full stemming and Lemmatizer for irregular forms
 LEMMATIZER = Lemmatizer.new
 
