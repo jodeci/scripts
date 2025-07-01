@@ -11,21 +11,35 @@ text = File.read(file)
 # are tokenized correctly
 text.gsub!(/[\u2018\u2019]/, "'")
 
+# Remove stray "'s" fragments that can appear when apostrophes are detached but
+# ensure we don't strip possessives like "lucy's"
+text.gsub!(/(?<![A-Za-z])'s\b/, '')
+
 # Remove dialogue inside double quotes
 text.gsub!(/"[^"]*"/, '')
 
-# Tokenize words (letters and apostrophes only)
-words = text.downcase.scan(/[a-z']+/)
+# Tokenize words. Allow internal apostrophes but avoid leading ones so we don't
+# end up with stray "'s" tokens.
+words = text.downcase.scan(/[a-z]+(?:'[a-z]+)*/)
 
 # Stop words to place at the end
 STOP_WORDS = %w[a an the he she it his her him their they them is am are was were be been being have has had do does did to in on at for and or but if then with by of from this i as that].freeze
+# Map irregular verb forms so words like "froze" and "freeze" are grouped
+IRREGULAR_FORMS = {
+  'froze'  => 'freez',
+  'frozen' => 'freez',
+  'went'   => 'go',
+  'gone'   => 'go'
+}.freeze
 # Use fast-stemmer for full stemming
 
 # Count occurrences by stem and original word
 counts = Hash.new { |h, k| h[k] = { count: 0, forms: Hash.new(0), order: nil } }
 index = 0
 words.each do |word|
+  # Stem the word and then apply any irregular mapping
   root = Stemmer.stem_word(word)
+  root = IRREGULAR_FORMS.fetch(word, IRREGULAR_FORMS.fetch(root, root))
   data = counts[root]
   data[:order] ||= index
   data[:count] += 1
