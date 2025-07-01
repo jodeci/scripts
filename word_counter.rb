@@ -28,7 +28,9 @@ text.gsub!(/"[^"]*"/m, '')
 words = text.downcase.scan(/[a-z]+(?:'[a-z]+)*/)
 
 # Stop words to place at the end using the built-in list from the stopwords gem
-STOP_WORDS = Stopwords::STOP_WORDS.to_set
+# plus a few common contractions and auxiliary verbs that are not included
+# in that list.
+STOP_WORDS = Stopwords::STOP_WORDS.to_set.merge(%w[did didn't couldn't])
 # Use fast-stemmer for full stemming and Lemmatizer for irregular forms
 LEMMATIZER = Lemmatizer.new
 
@@ -36,6 +38,8 @@ LEMMATIZER = Lemmatizer.new
 counts = Hash.new { |h, k| h[k] = { count: 0, forms: Hash.new(0), order: nil } }
 index = 0
 words.each do |word|
+  # Remove trailing possessive 's so "lucy's" and "lucy" are grouped together
+  word = word.sub(/'s$/, '')
   # Normalize irregular forms using the lemmatizer then stem
   lemma = LEMMATIZER.lemma(word)
   root = Stemmer.stem_word(lemma)

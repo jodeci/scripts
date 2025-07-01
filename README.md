@@ -17,4 +17,7 @@ gem install fast-stemmer lemmatizer stopwords
 ```
 
 The script removes dialogue enclosed in straight or curly double quotes before
-counting words so quoted speech is ignored.
+counting words so quoted speech is ignored. Trailing possessive `'s` is
+collapsed so words like `Lucy` and `Lucy's` are tallied together. A few extra
+contractions such as `didn't` and `couldn't` are added to the default stop word
+list provided by the `stopwords` gem.
