@@ -2,12 +2,19 @@
 require "fast_stemmer"
 require "lemmatizer"
 require "stopwords"
+require "optimist"
 require "set"
 
-abort "usage: #{__FILE__} [markdown_file]" if ARGV.empty?
+opts = Optimist.options do
+  banner "usage: #{__FILE__} [options] markdown_file"
+  opt :show_stopwords, "Include stop words in output", short: 's', default: false
+  opt :output, "Write results to file", short: 'o', type: :string
+end
+
+abort Optimist.educate unless ARGV.length == 1
 
 # Read input file
-file = ARGV[0]
+file = ARGV.shift
 text = File.read(file)
 
 # Normalize curly apostrophes to regular ones so words like “couldn’t”
@@ -77,11 +84,15 @@ end
 sorted_main = main.sort_by { |e| [-e[1], e[0]] }
 sorted_stop = stop.sort_by { |e| [-e[1], e[0]] }
 
-(sorted_main + sorted_stop).each do |form_list, total, _|
-  if total > 1
-    puts "#{form_list} (#{total})"
-  else
-    puts form_list
-  end
+entries = opts[:show_stopwords] ? (sorted_main + sorted_stop) : sorted_main
+
+lines = entries.map do |form_list, total, _|
+  total > 1 ? "#{form_list} (#{total})" : form_list
+end
+
+if opts[:output]
+  File.write(opts[:output], lines.join("\n") + "\n")
+else
+  puts lines
 end
 

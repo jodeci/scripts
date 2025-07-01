@@ -3,17 +3,25 @@
 ## Setup
 
 These scripts rely on a few Ruby gems. To run `word_counter.rb`, install the
-`fast-stemmer`, `lemmatizer`, and `stopwords` gems. The `stopwords` gem
-provides a dictionary of common English stop words used by the script:
+`fast-stemmer`, `lemmatizer`, `stopwords`, and `optimist` gems. The
+`stopwords` gem provides a dictionary of common English stop words used by the
+script and `optimist` supplies easy option parsing:
 
 ```bash
-gem install fast-stemmer lemmatizer stopwords
+gem install fast-stemmer lemmatizer stopwords optimist
 ```
 
 ## Usage
 
 ```bash
 ./word_counter.rb sample.md
+```
+
+You can include stop words in the output with `-s` and redirect the results to
+a file with `-o`:
+
+```bash
+./word_counter.rb -s -o results.txt sample.md
 ```
 
 The script removes dialogue enclosed in straight or curly double quotes before
