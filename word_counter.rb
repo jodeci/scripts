@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require "lingua/stemmer"
 
 abort "usage: #{__FILE__} [markdown_file]" if ARGV.empty?
 
@@ -18,34 +19,14 @@ words = text.downcase.scan(/[a-z']+/)
 
 # Stop words to place at the end
 STOP_WORDS = %w[a an the he she it his her him their they them is am are was were be been being have has had do does did to in on at for and or but if then with by of from this i as that].freeze
-
-# Simple stemming to group different tenses
-# This is a naive approach; for full stemming use a dedicated library
-
-def stem(word)
-  w = word.downcase
-  w.gsub!(/'s$/, '')
-  return w if w.length <= 2
-
-  if w.end_with?('ing') && w.length > 5
-    w = w.sub(/ing$/, '')
-  elsif w.end_with?('ed') && w.length > 3
-    w = w.sub(/ed$/, '')
-  elsif w.end_with?('es') && w.length > 3
-    w = w.sub(/es$/, '')
-  elsif w.end_with?('s') && w.length > 3 && !w.end_with?('ss')
-    w = w.sub(/s$/, '')
-  elsif w.end_with?('e') && w.length > 3
-    w = w.sub(/e$/, '')
-  end
-  w
-end
+# Use Lingua::Stemmer for full stemming
+STEMMER = Lingua::Stemmer.new(language: "en")
 
 # Count occurrences by stem and original word
 counts = Hash.new { |h, k| h[k] = { count: 0, forms: Hash.new(0), order: nil } }
 index = 0
 words.each do |word|
-  root = stem(word)
+  root = STEMMER.stem(word)
   data = counts[root]
   data[:order] ||= index
   data[:count] += 1
