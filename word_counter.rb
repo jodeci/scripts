@@ -9,6 +9,7 @@ opts = Optimist.options do
   banner "usage: #{__FILE__} [options] markdown_file"
   opt :show_stopwords, "Include stop words in output", short: 's', default: false
   opt :output, "Write results to file", short: 'o', type: :string
+  opt :repeat_only, "Show only words that occur more than once", short: 'r', default: true
 end
 
 abort Optimist.educate unless ARGV.length == 1
@@ -85,6 +86,7 @@ sorted_main = main.sort_by { |e| [-e[1], e[0]] }
 sorted_stop = stop.sort_by { |e| [-e[1], e[0]] }
 
 entries = opts[:show_stopwords] ? (sorted_main + sorted_stop) : sorted_main
+entries.select! { |_, total, _| total > 1 } if opts[:repeat_only]
 
 lines = entries.map do |form_list, total, _|
   total > 1 ? "#{form_list} (#{total})" : form_list

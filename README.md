@@ -18,10 +18,11 @@ gem install fast-stemmer lemmatizer stopwords optimist
 ```
 
 You can include stop words in the output with `-s` and redirect the results to
-a file with `-o`:
+a file with `-o`. By default only repeated words are printed; pass
+`--no-repeat-only` to show every word:
 
 ```bash
-./word_counter.rb -s -o results.txt sample.md
+./word_counter.rb -s -o results.txt --no-repeat-only sample.md
 ```
 
 The script removes dialogue enclosed in straight or curly double quotes before
