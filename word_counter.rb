@@ -18,18 +18,31 @@ abort Optimist.educate unless ARGV.length == 1
 file = ARGV.shift
 text = File.read(file)
 
-# Normalize curly apostrophes to regular ones so words like “couldn’t”
-# are tokenized correctly
-text.gsub!(/[\u2018\u2019]/, "'")
-# Normalize curly double quotes so dialogue can be removed consistently
-text.gsub!(/[\u201C\u201D]/, '"')
+# Normalize curly apostrophes so words like “couldn’t” are tokenized correctly
+text.tr!("\u2018\u2019", "'")
+# Normalize various curly double quotes so dialogue can be removed consistently
+text.tr!("\u201C\u201D\u201E\u201F\u2033\u2036", '"')
 
 # Remove stray "'s" fragments that can appear when apostrophes are detached but
 # ensure we don't strip possessives like "lucy's"
 text.gsub!(/(?<![A-Za-z])'s\b/, '')
 
-# Remove dialogue inside double quotes (including normalized curly quotes)
-text.gsub!(/"[^"]*"/m, '')
+# Strip dialogue inside double quotes using a simple state machine. This works
+# more reliably on large files with uneven quoting than a single regex.
+def strip_dialogue(text)
+  inside = false
+  result = +''
+  text.each_char do |ch|
+    if ch == '"'
+      inside = !inside
+    elsif !inside
+      result << ch
+    end
+  end
+  result
+end
+
+text = strip_dialogue(text)
 
 # Tokenize words. Allow internal apostrophes but avoid leading ones so we don't
 # end up with stray "'s" tokens.

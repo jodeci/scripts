@@ -25,10 +25,10 @@ a file with `-o`. By default only repeated words are printed; pass
 ./word_counter.rb -s -o results.txt --no-repeat-only sample.md
 ```
 
-The script removes dialogue enclosed in straight or curly double quotes before
-counting words so quoted speech is ignored. Trailing possessive `'s` is
-collapsed so words like `Lucy` and `Lucy's` are tallied together. Extra stop
-words like `this`, `i`, `as`, `that`, `his`, `they`, `did`, `could`, `didn't`,
-and `couldn't` are merged with the gem's default list. Their stems are
-precomputed so conjugated forms such as `did` (which lemmatizes to `do`) are
-still matched.
+The script strips dialogue enclosed in straight or curly double quotes using a
+quote-aware scanner so longer files with uneven quoting are handled correctly.
+Trailing possessive `'s` is collapsed so words like `Lucy` and `Lucy's` are
+tallied together. Extra stop words like `this`, `i`, `as`, `that`, `his`,
+`they`, `did`, `could`, `didn't`, and `couldn't` are merged with the gem's
+default list. Their stems are precomputed so conjugated forms such as `did`
+(which lemmatizes to `do`) are still matched.
