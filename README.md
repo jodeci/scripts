@@ -26,8 +26,7 @@ a file with `-o`. By default only repeated words are printed; pass
 ```
 
  The script strips dialogue enclosed in straight, curly, or angle double quotes
-as well as passages wrapped in single quotes when they act as dialogue.
-It uses a quote-aware scanner so longer files with uneven quoting are handled
+using a quote-aware scanner so longer files with uneven quoting are handled
  correctly.
 Trailing possessive `'s` is collapsed so words like `Lucy` and `Lucy's` are
 tallied together. Extra stop words like `this`, `i`, `as`, `that`, `his`,

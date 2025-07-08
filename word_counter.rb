@@ -29,11 +29,8 @@ text.tr!("\u201C\u201D\u201E\u201F\u2033\u2036\u00AB\u00BB", '"')
 # ensure we don't strip possessives like "lucy's"
 text.gsub!(/(?<![A-Za-z])'s\b/, '')
 
-# Strip dialogue inside double or single quotes using a quote-aware scanner.
-# Single quotes are treated as dialogue delimiters only when they look like
-# actual quotation marks rather than apostrophes in contractions.
+# Strip dialogue enclosed in double quotes using a quote-aware scanner.
 def strip_dialogue(text)
-  # handle double-quoted dialogue first
   inside_dq = false
   result = +''
   text.each_char do |ch|
@@ -42,29 +39,6 @@ def strip_dialogue(text)
     elsif !inside_dq
       result << ch
     end
-  end
-
-  # now strip single-quoted dialogue from the intermediate result
-  text = result
-  result = +''
-  inside_sq = false
-  text.chars.each_with_index do |ch, idx|
-    if ch == "'"
-      prev = idx.zero? ? ' ' : text[idx - 1]
-      nxt  = idx + 1 >= text.length ? ' ' : text[idx + 1]
-      if inside_sq
-        if nxt =~ /\s|\p{Punct}/
-          inside_sq = false
-          next
-        end
-      else
-        if prev =~ /\s|\p{Punct}/ && nxt =~ /[A-Za-z]/
-          inside_sq = true
-          next
-        end
-      end
-    end
-    result << ch unless inside_sq
   end
   result
 end
