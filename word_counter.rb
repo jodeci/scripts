@@ -96,8 +96,8 @@ counts.each do |root, data|
 end
 
 # Sort by frequency then order of appearance
-sorted_main = main.sort_by { |e| [-e[1], e[0]] }
-sorted_stop = stop.sort_by { |e| [-e[1], e[0]] }
+sorted_main = main.sort_by { |form_list, total, order| [-total, order] }
+sorted_stop = stop.sort_by { |form_list, total, order| [-total, order] }
 
 entries = opts[:show_stopwords] ? (sorted_main + sorted_stop) : sorted_main
 entries.select! { |_, total, _| total > 1 } if opts[:repeat_only]

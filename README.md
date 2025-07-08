@@ -27,7 +27,8 @@ a file with `-o`. By default only repeated words are printed; pass
 
  The script strips dialogue enclosed in straight, curly, or angle double quotes
 using a quote-aware scanner so longer files with uneven quoting are handled
- correctly.
+ correctly. See `sample_quotes.md` for examples including single-quoted,
+angle-quoted, and curly-quoted dialogue.
 Trailing possessive `'s` is collapsed so words like `Lucy` and `Lucy's` are
 tallied together. Extra stop words like `this`, `i`, `as`, `that`, `his`,
 `they`, `did`, `could`, `didn't`, and `couldn't` are merged with the gem's
