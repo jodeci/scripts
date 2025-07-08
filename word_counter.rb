@@ -20,8 +20,10 @@ text = File.read(file)
 
 # Normalize curly apostrophes so words like “couldn’t” are tokenized correctly
 text.tr!("\u2018\u2019", "'")
-# Normalize various curly double quotes so dialogue can be removed consistently
-text.tr!("\u201C\u201D\u201E\u201F\u2033\u2036", '"')
+# Normalize various curly and angle double quotes so dialogue can be removed
+# consistently.  This helps drop text quoted with less common punctuation such
+# as «like this».
+text.tr!("\u201C\u201D\u201E\u201F\u2033\u2036\u00AB\u00BB", '"')
 
 # Remove stray "'s" fragments that can appear when apostrophes are detached but
 # ensure we don't strip possessives like "lucy's"
