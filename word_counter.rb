@@ -18,6 +18,9 @@ abort Optimist.educate unless ARGV.length == 1
 file = ARGV.shift
 text = File.read(file)
 
+# Remove dialogue enclosed in curly double quotes first
+text.gsub!(/“[^”]*”/m, '')
+
 # Normalize curly apostrophes so words like “couldn’t” are tokenized correctly
 text.tr!("\u2018\u2019", "'")
 # Normalize various curly and angle double quotes so dialogue can be removed

@@ -25,10 +25,11 @@ a file with `-o`. By default only repeated words are printed; pass
 ./word_counter.rb -s -o results.txt --no-repeat-only sample.md
 ```
 
- The script strips dialogue enclosed in straight, curly, or angle double quotes
-using a quote-aware scanner so longer files with uneven quoting are handled
- correctly. See `sample_quotes.md` for examples including single-quoted,
-angle-quoted, and curly-quoted dialogue.
+ The script strips dialogue before counting words. It first removes text
+ enclosed in curly double quotes (`“...”`) and then runs a quote-aware scanner
+ to drop any remaining straight or angle double quoted passages. See
+ `sample_quotes.md` for examples including single-quoted, angle-quoted, and
+ curly-quoted dialogue.
 Trailing possessive `'s` is collapsed so words like `Lucy` and `Lucy's` are
 tallied together. Extra stop words like `this`, `i`, `as`, `that`, `his`,
 `they`, `did`, `could`, `didn't`, and `couldn't` are merged with the gem's
