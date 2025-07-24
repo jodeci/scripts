@@ -3,6 +3,7 @@ require "fast_stemmer"
 require "lemmatizer"
 require "stopwords"
 require "optimist"
+require "yaml"
 require "set"
 
 opts = Optimist.options do
@@ -10,7 +11,6 @@ opts = Optimist.options do
   opt :show_stopwords, "Include stop words in output", short: 's', default: false
   opt :output, "Write results to file", short: 'o', type: :string
   opt :repeat_only, "Show only words that occur more than once", short: 'r', default: true
-  opt :keep, "Comma-separated stop words to treat as regular words", short: 'k', type: :string
 end
 
 abort Optimist.educate unless ARGV.length == 1
@@ -68,14 +68,14 @@ STOP_WORD_STEMS = STOP_WORDS_ORIG.map do |w|
   Stemmer.stem_word(lemma)
 end.to_set
 
-# Remove user-specified keep words from the stop word list
-keep_stems = []
-if opts[:keep]
-  opts[:keep].split(/,\s*/).each do |kw|
-    normalized = kw.downcase.gsub(/[\u2018\u2019]/, "'")
-    lemma = LEMMATIZER.lemma(normalized)
-    keep_stems << Stemmer.stem_word(lemma)
-  end
+# Remove keep words defined in word_counter.yml from the stop word list
+config_file = File.expand_path('word_counter.yml', __dir__)
+config = File.exist?(config_file) ? YAML.load_file(config_file) : {}
+keep_words = Array(config['keep_stop_words'])
+keep_stems = keep_words.map do |kw|
+  normalized = kw.to_s.downcase.gsub(/[\u2018\u2019]/, "'")
+  lemma = LEMMATIZER.lemma(normalized)
+  Stemmer.stem_word(lemma)
 end
 keep_stems.each { |stem| STOP_WORD_STEMS.delete(stem) }
 
