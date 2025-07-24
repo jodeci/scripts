@@ -17,12 +17,14 @@ gem install fast-stemmer lemmatizer stopwords optimist
 ./word_counter.rb sample.md
 ```
 
-You can include stop words in the output with `-s` and redirect the results to
-a file with `-o`. By default only repeated words are printed; pass
-`--no-repeat-only` to show every word:
+You can include stop words in the output with `-s`, keep particular stop words
+from being filtered using `-k word1,word2`, and redirect results to a file with
+`-o`. By default only repeated words are printed; pass `--no-repeat-only` to
+show every word:
 
 ```bash
 ./word_counter.rb -s -o results.txt --no-repeat-only sample.md
+./word_counter.rb -k still sample.md
 ```
 
  The script strips dialogue before counting words. It first removes text
@@ -35,3 +37,5 @@ tallied together. Extra stop words like `this`, `i`, `as`, `that`, `his`,
 `they`, `did`, `could`, `didn't`, and `couldn't` are merged with the gem's
 default list. Their stems are precomputed so conjugated forms such as `did`
 (which lemmatizes to `do`) are still matched.
+Pass `-k still` or another comma-separated list to keep particular stop words in
+the main output.
