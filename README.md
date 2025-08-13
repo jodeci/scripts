@@ -36,11 +36,12 @@ keep_stop_words:
 
 The script loads this configuration automatically if the file exists.
 
- The script strips dialogue before counting words. It first removes text
- enclosed in curly double quotes (`“...”`) and then runs a quote-aware scanner
- to drop any remaining straight or angle double quoted passages. See
- `sample_quotes.md` for examples including single-quoted, angle-quoted, and
- curly-quoted dialogue.
+It removes Markdown headers (lines starting with `##`) and any text enclosed in
+underscores before counting words. The script also strips dialogue. It first
+removes text enclosed in curly double quotes (`“...”`) and then runs a
+quote-aware scanner to drop any remaining straight or angle double quoted
+passages. See `sample_quotes.md` for examples including single-quoted,
+angle-quoted, and curly-quoted dialogue.
 Trailing possessive `'s` is collapsed so words like `Lucy` and `Lucy's` are
 tallied together. Extra stop words like `this`, `i`, `as`, `that`, `his`,
 `they`, `did`, `could`, `didn't`, and `couldn't` are merged with the gem's

@@ -19,7 +19,11 @@ abort Optimist.educate unless ARGV.length == 1
 file = ARGV.shift
 text = File.read(file)
 
-# Remove dialogue enclosed in curly double quotes first
+# Remove Markdown headers and underlined text
+text.gsub!(/^##.*\n?/, '')
+text.gsub!(/_[^_]*_/, '')
+
+# Remove dialogue enclosed in curly double quotes
 text.gsub!(/“[^”]*”/m, '')
 
 # Normalize curly apostrophes so words like “couldn’t” are tokenized correctly
